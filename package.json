@@ -7,7 +7,7 @@
     "start": "node --env-file=.env app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Dushmanta",
   "license": "ISC",
   "dependencies": {
     "google-auth-library": "^9.15.1",
