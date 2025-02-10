@@ -1,0 +1,16 @@
+{
+  "name": "google-sheet-upload",
+  "version": "0.0.1",
+  "description": "Node.js script to upload multiple CSV to Google Sheets.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node --env-file=.env app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "google-auth-library": "^9.15.1",
+    "google-spreadsheet": "^4.1.4"
+  }
+}
