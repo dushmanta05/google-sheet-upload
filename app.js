@@ -1,21 +1,21 @@
-const fs = require("node:fs");
-const path = require("node:path");
-const { GoogleSpreadsheet } = require("google-spreadsheet");
-const { JWT } = require("google-auth-library");
+const fs = require('node:fs');
+const path = require('node:path');
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const { JWT } = require('google-auth-library');
 
 const { ACCOUNT_EMAIL, PRIVATE_KEY, SPREADSHEET_ID } = process.env;
-const formattedKey = PRIVATE_KEY.replace(/\\n/g, "\n");
-const UPLOAD_FOLDER = "upload";
+const formattedKey = PRIVATE_KEY.replace(/\\n/g, '\n');
+const UPLOAD_FOLDER = 'upload';
 const CHUNK_SIZE = 3900;
 
 function cleanData(value) {
   const newValue = value.trim();
-  if (newValue === '""') return "";
-  return newValue.replace(/^"(.*)"$/, "$1");
+  if (newValue === '""') return '';
+  return newValue.replace(/^"(.*)"$/, '$1');
 }
 
 function getColumnLetter(columnIndex) {
-  let letter = "";
+  let letter = '';
   let index = columnIndex;
   while (index >= 0) {
     letter = String.fromCharCode(65 + (index % 26)) + letter;
@@ -29,13 +29,13 @@ async function uploadToGoogleSheets(data, sheetName) {
     const serviceAccountAuth = new JWT({
       email: ACCOUNT_EMAIL,
       key: formattedKey,
-      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
 
     const doc = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
     await doc.loadInfo();
 
-    const rows = data.split("\n").map((row) => row.split(",").map(cleanData));
+    const rows = data.split('\n').map((row) => row.split(',').map(cleanData));
     const headers = rows[0];
     const values = rows.slice(1).filter((row) => row.length > 1);
 
@@ -87,7 +87,7 @@ async function uploadToGoogleSheets(data, sheetName) {
 }
 
 async function processAllFiles() {
-  console.log("Starting CSV upload process...");
+  console.log('Starting CSV upload process...');
 
   if (!fs.existsSync(UPLOAD_FOLDER)) {
     fs.mkdirSync(UPLOAD_FOLDER);
@@ -96,27 +96,27 @@ async function processAllFiles() {
 
   const files = fs
     .readdirSync(UPLOAD_FOLDER)
-    .filter((file) => file.endsWith(".csv"));
+    .filter((file) => file.endsWith('.csv'));
 
   if (files.length === 0) {
-    console.log("No CSV files found in upload folder");
+    console.log('No CSV files found in upload folder');
     return;
   }
 
   for (const file of files) {
     const filePath = path.join(UPLOAD_FOLDER, file);
-    const sheetName = path.basename(file, ".csv");
+    const sheetName = path.basename(file, '.csv');
     console.log(`Processing ${file}...`);
 
     try {
-      const fileContent = fs.readFileSync(filePath, "utf-8");
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
       await uploadToGoogleSheets(fileContent, sheetName);
     } catch (error) {
       console.error(`Error processing ${file}:`, error.message);
     }
   }
 
-  console.log("All files processed successfully!");
+  console.log('All files processed successfully!');
 }
 
 processAllFiles();
