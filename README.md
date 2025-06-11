@@ -4,9 +4,20 @@ Node.js script to upload multiple CSV files to Google Sheets using the `google-s
 
 ## Prerequisites
 
-- Node.js 20
+- Node.js **v20.6.0** or later
 
-This script has been tested and built with Node.js 20. It may work with other versions, but please check for compatibility with all packages and modules.
+This project specifically supports and has been tested with **Node.js v20.6.0**, which introduces the `--env-file` flag in the Node.js runtime itself. While it may work with newer versions, compatibility should be verified with all dependencies.
+
+> Use `nvm` to switch to the correct version:
+```bash
+nvm use
+```
+
+> If it's not already installed, run:
+
+```bash
+nvm install
+```
 
 ## Setup
 
